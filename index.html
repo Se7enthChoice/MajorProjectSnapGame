@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chat App</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+  </style>
+</head>
+<body>
+<div id="create-game">
+		<button id="create-game-btn" onclick="createGame()">Create Game</button>
+		<span id="game-id"></span>
+	</div>
+	<div id="join-game">
+		<label for="game-id-input">Enter Game ID:</label>
+		<input type="text" id="game-id-input">
+		<button id="join-game-btn " onclick="joinGame()">Join Game</button>
+	</div>
+  <div id="snap-ui">
+    <button id="draw-btn" onclick="drawFunction()" disabled>Draw</button>
+    <button id="snap-btn" onclick="snapFunction()" disabled>Snap</button>
+  </div>
+  <div id="game-container"></div>
+</body>
+</html>
