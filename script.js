@@ -33,8 +33,7 @@ socket.on('game-start', data => {
     document.getElementById("snap-ui").style.display = "block"; //show game ui
     document.getElementById("game-container").style.display = "block"; //show game ui
     document.getElementById("snap-btn").disabled = false; //enable snap button
-    document.getElementById("create-game").style.display = "none"; //hide create game ui   
-    document.getElementById("join-game").style.display = "none"; //hide join game ui
+    document.getElementById("container").style.display = "none"; //hide startup game ui   
     displayInGameContainer('Game is now starting!')
   })
 
@@ -54,6 +53,17 @@ socket.on('card-drawn', data => {
     lastCards.splice(2,2);
     let xxx = JSON.stringify(lastCards);
     console.log(xxx);
+  })
+  
+  socket.on('snap-reached', data => {
+    var playerWhoCalled = data.playerWhoCalled;
+    if(data.declaration === 'true'){
+        displayInGameContainer(`${playerWhoCalled} called SNAP correctly. ${playerWhoCalled} has won the game.`);
+        document.getElementById("snap-btn").disabled = true; //disable snap button
+        document.getElementById("draw-btn").disabled = true; //disable draw button
+    }else if(data.declaration === 'false'){
+        displayInGameContainer(`${playerWhoCalled} called SNAP incorrectly. The game continues.`);
+    }
   })
 
 function displayInGameContainer(message){ //communicate changes in game state to user (game UI)

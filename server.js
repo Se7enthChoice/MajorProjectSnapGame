@@ -22,12 +22,11 @@ io.on('connection', socket => {
 
     socket.on('join-game', gameIdToJoin => { //when client tries to join a game
         games[gameIdToJoin].push(socket.id);
-        
-        /*let gameEval = JSON.stringify(games);//debug
-        console.log(gameEval);
-        let gameEval2 = JSON.stringify(users);//debug
-        console.log(gameEval2);*/
-
+        if(games[gameIdToJoin].length > 1){    //if 2 in game then players then start game
+            console.log("Two users connected, game with id " + gameIdToJoin + " is now starting!");
+            gameLogicStart(games[gameIdToJoin],gameIdToJoin); //pass all users in that game and the game id to the game logic function
+        }
+    
         for(var g in games){
             //console.log(g + ' and ' + games[g]);// gets gameid, then array of all connected socketids
             //console.log(users[games[g]]);//GETS NAME
@@ -36,11 +35,6 @@ io.on('connection', socket => {
                 console.log(element); //prints socketid
                 console.log(users[element]); //prints name
             });
-
-            if(games[g].length > 1){    //if 2 in game then players then start game
-                console.log("Two users connected, game with id " + g + " is now starting!");
-                gameLogicStart(games[g],g); //pass all users in that game and the game id to the game logic function
-            }
         }
     })
 
@@ -85,20 +79,29 @@ io.on('connection', socket => {
         console.log(users[socket.id] + ' has called SNAP! in game id ' + data.gid);
         var lastCard1 = data.lastCards[0];
         var lastCard2 = data.lastCards[1];
+        var playerWhoCalled = users[socket.id];
 
         if (lastCard1.includes(lastCard2.substring(0, 2)) || lastCard2.includes(lastCard1.substring(0, 2))) {
             console.log("SNAP SNAP SNAP");
+            games[data.gid].forEach(socketId => {
+                io.to(socketId).emit('snap-reached',{declaration: 'true', playerWhoCalled: playerWhoCalled});
+            });
         }else{
             console.log("False Snap Delclaration");
+            games[data.gid].forEach(socketId => {
+                io.to(socketId).emit('snap-reached',{declaration: 'false', playerWhoCalled: playerWhoCalled});
+            });
         }
     })
 })
 
 function gameLogicStart(gamePlayers, currentGameId){
     console.log('Game Players: ' + gamePlayers + ' and Game ID: '+ currentGameId);
-    gamePlayers.forEach(player => {
-        io.to(player).emit('game-start'); //tell all connected clients game is starting
-    });
+    
+    //console.log();
+
+    io.to(gamePlayers[0]).emit('game-start');//tell all connected clients game is starting
+    io.to(gamePlayers[1]).emit('game-start');
 
     //STARTING SETUP FOR SNAP START
     //Deck declaration
