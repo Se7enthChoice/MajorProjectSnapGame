@@ -26,6 +26,16 @@
     box-sizing: border-box;
 }
 
+#game-id-display {
+    display: block;
+    color: white;
+    text-align: center;
+    position: relative;
+    bottom: -100px;
+    padding-top: 100px;
+    font-size: xx-large;
+}
+
 body {
     margin: 0;
     padding: 0;

@@ -18,6 +18,8 @@ io.on('connection', socket => {
         let clients = [];
         games[gameId] = clients;
         console.log("new game created with id " + gameId);
+
+        io.to(socket.id).emit('game-created',{gameId: gameId}); //tell the client the new game's ID so they can share it with other users
     })
 
     socket.on('join-game', gameIdToJoin => { //when client tries to join a game
